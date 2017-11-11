@@ -16,6 +16,7 @@ from docopt import docopt
 
 import donkeycar as dk
 
+
 #import parts
 from donkeycar.parts.camera import PiCamera
 from donkeycar.parts.transform import Lambda
@@ -23,7 +24,7 @@ from donkeycar.parts.keras import KerasCategorical
 from donkeycar.parts.actuator import PCA9685, PWMSteering, PWMThrottle
 from donkeycar.parts.datastore import TubHandler, TubGroup
 from donkeycar.parts.controller import LocalWebController, JoystickController
-from donkeycar.parts.keras import KearsIMU
+from donkeycar.parts.keras import KerasIMU
 from donkeycar.parts.imu    import Mpu6050
 
 
