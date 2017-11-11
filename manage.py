@@ -20,11 +20,12 @@ import donkeycar as dk
 from donkeycar.parts.camera import PiCamera
 from donkeycar.parts.transform import Lambda
 from donkeycar.parts.keras import KerasCategorical
+from donkeycar.parts.keras import KerasIMU
+from donkeycar.parts.imu import Mpu6050
 from donkeycar.parts.actuator import PCA9685, PWMSteering, PWMThrottle
 from donkeycar.parts.datastore import TubHandler, TubGroup
 from donkeycar.parts.controller import LocalWebController, JoystickController
-from donkeycar.parts.keras import KerasIMU
-from donkeycar.parts.imu    import Mpu6050
+import numpy as np
 
 
 def drive(cfg, model_path=None, use_joystick=False):
@@ -154,7 +155,8 @@ def train(cfg, tub_names, model_name):
     y_keys = ['user/angle', 'user/throttle']
 
     def rt(rec):
-        rec['imu/imu_arr']
+        rec['imu_array'] = np.array([ rec['imu/acl_x'], rec['imu/acl_y'], rec['imu/acl_z'],
+            rec['imu/gyr_x'], rec['imu/gyr_y'], rec['imu/gyr_z'], rec['imu/temp'] ])
         return rec
 
 
@@ -164,8 +166,8 @@ def train(cfg, tub_names, model_name):
         tub_names = os.path.join(cfg.DATA_PATH, '*')
     tubgroup = TubGroup(tub_names)
     train_gen, val_gen = tubgroup.get_train_val_gen(X_keys, y_keys, record_transform=rt,
-                                                    batch_size=cfg.BATCH_SIZE,
-                                                    train_frac=cfg.TRAIN_TEST_SPLIT)
+                                                        batch_size=cfg.BATCH_SIZE,
+                                                        train_frac=cfg.TRAIN_TEST_SPLIT)
 
     model_path = os.path.expanduser(model_name)
 
