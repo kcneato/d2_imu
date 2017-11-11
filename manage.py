@@ -191,7 +191,7 @@ if __name__ == '__main__':
     cfg = dk.load_config()
 
     if args['drive']:
-        drive(cfg, l_path = args['--model'], use_joystick=args['--js'])
+        drive(cfg, model_path = args['--model'], use_joystick=args['--js'])
 
     elif args['train']:
         tub = args['--tub']
