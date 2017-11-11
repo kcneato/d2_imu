@@ -75,13 +75,23 @@ def drive(cfg, model_path=None, use_joystick=False):
     V.add(pilot_condition_part, inputs=['user/mode'], outputs=['run_pilot'])
 
     #Run the pilot if the mode is not user.
-    kl = KerasCategorical()
+    kl =  KerasIMU()
     if model_path:
         kl.load(model_path)
 
-    V.add(kl, inputs=['cam/image_array'],
+    V.add(kl, inputs=['cam/image_array','imu/acl_x','imu/acc_y','imu/acc_z', 'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z', 'imu/temp'],
           outputs=['pilot/angle', 'pilot/throttle'],
           run_condition='run_pilot')
+
+
+
+    # kl = KerasCategorical()
+    # if model_path:
+    #     kl.load(model_path)
+    #
+    # V.add(kl, inputs=['cam/image_array'],
+    #       outputs=['pilot/angle', 'pilot/throttle'],
+    #       run_condition='run_pilot')
 
 
     #Choose what inputs should change the car.
@@ -119,12 +129,13 @@ def drive(cfg, model_path=None, use_joystick=False):
     V.add(throttle, inputs=['throttle'])
 
     #add tub to save data
-    inputs=['cam/image_array', 'user/angle', 'user/throttle', 'user/mode']
-    types=['image_array', 'float', 'float',  'str']
+    inputs=['cam/image_array','acl_x', 'imu/acl_y', 'imu/acl_z','imu/gyr_x','imu/gyr_y', 'imu/gyr_z', 'imu/temp', 'user/angle', 'user/throttle', 'user/mode']
+    types=['image_array', 'float','float', 'float', 'float', 'float', 'float','float', 'float', 'float',  'str']
 
     th = TubHandler(path=cfg.DATA_PATH)
     tub = th.new_tub_writer(inputs=inputs, types=types)
     V.add(tub, inputs=inputs, run_condition='recording')
+
 
     #run the vehicle for 20 seconds
     V.start(rate_hz=cfg.DRIVE_LOOP_HZ,
@@ -138,14 +149,16 @@ def train(cfg, tub_names, model_name):
     use the specified data in tub_names to train an artifical neural network
     saves the output trained model as model_name
     '''
-    X_keys = ['cam/image_array']
+
+    X_keys = ['cam/image_array','imu/imu_arr']
     y_keys = ['user/angle', 'user/throttle']
 
-    def rt(record):
-        record['user/angle'] = dk.utils.linear_bin(record['user/angle'])
-        return record
+    def rt(rec):
+        rec['imu/imu_arr']
+        return rec
 
-    kl = KerasCategorical()
+
+    kl = KerasIMU()
     print('tub_names', tub_names)
     if not tub_names:
         tub_names = os.path.join(cfg.DATA_PATH, '*')
@@ -155,6 +168,8 @@ def train(cfg, tub_names, model_name):
                                                     train_frac=cfg.TRAIN_TEST_SPLIT)
 
     model_path = os.path.expanduser(model_name)
+
+
 
     total_records = len(tubgroup.df)
     total_train = int(total_records * cfg.TRAIN_TEST_SPLIT)
@@ -168,6 +183,7 @@ def train(cfg, tub_names, model_name):
              saved_model_path=model_path,
              steps=steps_per_epoch,
              train_split=cfg.TRAIN_TEST_SPLIT)
+
 
 
 
