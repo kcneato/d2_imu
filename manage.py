@@ -76,10 +76,10 @@ def drive(cfg, model_path=None, use_joystick=False):
     V.add(pilot_condition_part, inputs=['user/mode'], outputs=['run_pilot'])
 
     #Run the pilot if the mode is not user.
-    kl =  default_imu()
+    kl =  KerasIMU()
     if model_path:
         kl.load(model_path)
-
+    print
     V.add(kl, inputs=['cam/image_array','imu/acl_x','imu/acc_y','imu/acc_z', 'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z', 'imu/temp'],
           outputs=['pilot/angle', 'pilot/throttle'],
           run_condition='run_pilot')
@@ -172,7 +172,6 @@ def train(cfg, tub_names, model_name):
     model_path = os.path.expanduser(model_name)
 
 
-
     total_records = len(tubgroup.df)
     total_train = int(total_records * cfg.TRAIN_TEST_SPLIT)
     total_val = total_records - total_train
@@ -185,10 +184,6 @@ def train(cfg, tub_names, model_name):
              saved_model_path=model_path,
              steps=steps_per_epoch,
              train_split=cfg.TRAIN_TEST_SPLIT)
-
-
-
-
 
 
 if __name__ == '__main__':
