@@ -76,7 +76,7 @@ def drive(cfg, model_path=None, use_joystick=False):
     V.add(pilot_condition_part, inputs=['user/mode'], outputs=['run_pilot'])
 
     #Run the pilot if the mode is not user.
-    kl =  KerasIMU()
+    kl =  default_imu()
     if model_path:
         kl.load(model_path)
 
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     cfg = dk.load_config()
 
     if args['drive']:
-        drive(cfg, model_path = args['--model'], use_joystick=args['--js'])
+        drive(cfg, l_path = args['--model'], use_joystick=args['--js'])
 
     elif args['train']:
         tub = args['--tub']
