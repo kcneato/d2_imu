@@ -1,1 +1,0 @@
-{"types": ["image_array", "float", "float", "float", "float", "float", "float", "float", "float", "float", "str"], "inputs": ["cam/image_array", "imu/acl_x", "imu/acl_y", "imu/acl_z", "imu/gyr_x", "imu/gyr_y", "imu/gyr_z", "imu/temp", "user/angle", "user/throttle", "user/mode"]}

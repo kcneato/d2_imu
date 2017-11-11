@@ -130,7 +130,7 @@ def drive(cfg, model_path=None, use_joystick=False):
     V.add(throttle, inputs=['throttle'])
 
     #add tub to save data
-    inputs=['cam/image_array','acl_x', 'imu/acl_y', 'imu/acl_z','imu/gyr_x','imu/gyr_y', 'imu/gyr_z', 'imu/temp', 'user/angle', 'user/throttle', 'user/mode']
+    inputs=['cam/image_array','imu/acl_x', 'imu/acl_y', 'imu/acl_z','imu/gyr_x','imu/gyr_y', 'imu/gyr_z', 'imu/temp', 'user/angle', 'user/throttle', 'user/mode']
     types=['image_array', 'float','float', 'float', 'float', 'float', 'float','float', 'float', 'float',  'str']
 
     th = TubHandler(path=cfg.DATA_PATH)
@@ -151,7 +151,7 @@ def train(cfg, tub_names, model_name):
     saves the output trained model as model_name
     '''
 
-    X_keys = ['cam/image_array','imu/imu_arr']
+    X_keys = ['cam/image_array','imu/imu_array']
     y_keys = ['user/angle', 'user/throttle']
 
     def rt(rec):
