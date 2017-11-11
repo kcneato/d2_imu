@@ -40,8 +40,11 @@ def drive(cfg, model_path=None, use_joystick=False):
 
     #Initialize car
     V = dk.vehicle.Vehicle()
+    imu = Mpu6050()
     cam = PiCamera(resolution=cfg.CAMERA_RESOLUTION)
+    V.add(imu, outputs=[ 'imu/acl_x', 'imu/acl_y', 'imu/acl_z','imu/gyr_x','imu/gyr_y', 'imu/gyr_z', 'imu/temp'], threaded=True)
     V.add(cam, outputs=['cam/image_array'], threaded=True)
+
 
     if use_joystick or cfg.USE_JOYSTICK_AS_DEFAULT:
         #modify max_throttle closer to 1.0 to have more power
