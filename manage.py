@@ -151,7 +151,7 @@ def train(cfg, tub_names, model_name):
     saves the output trained model as model_name
     '''
 
-    X_keys = ['cam/image_array','imu/imu_array']
+    X_keys = ['cam/image_array','imu_array']
     y_keys = ['user/angle', 'user/throttle']
 
     def rt(rec):
