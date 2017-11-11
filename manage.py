@@ -16,7 +16,6 @@ from docopt import docopt
 
 import donkeycar as dk
 
-
 #import parts
 from donkeycar.parts.camera import PiCamera
 from donkeycar.parts.transform import Lambda
