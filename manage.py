@@ -81,7 +81,7 @@ def drive(cfg, model_path=None, use_joystick=False):
         kl.load(model_path)
     print
     V.add(kl, inputs=['cam/image_array','imu/acl_x','imu/acc_y','imu/acc_z', 'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z', 'imu/temp'],
-          outputs=['pilot/angles', 'pilot/throttle'],
+          outputs=['pilot/angle', 'pilot/throttle'],
           run_condition='run_pilot')
 
 
