@@ -156,7 +156,7 @@ def train(cfg, tub_names, model_name):
 
     def rt(rec):
         rec['imu_array'] = np.array([ rec['imu/acl_x'], rec['imu/acl_y'], rec['imu/acl_z'],
-            rec['imu/gyr_x'], rec['imu/gyr_y'], rec['imu/gyr_z'], rec['imu/temp'] ])
+            rec['imu/gyr_x'], rec['imu/gyr_y'], rec['imu/gyr_z'], rec['imu/temp'], rec['user/user_angle'] ])
         return rec
 
 
