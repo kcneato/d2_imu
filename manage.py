@@ -79,20 +79,11 @@ def drive(cfg, model_path=None, use_joystick=False):
     kl =  KerasIMU()
     if model_path:
         kl.load(model_path)
-    print
+    #print
     V.add(kl, inputs=['cam/image_array','imu/acl_x','imu/acc_y','imu/acc_z', 'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z', 'imu/temp'],
           outputs=['pilot/angle', 'pilot/throttle'],
           run_condition='run_pilot')
 
-
-
-    # kl = KerasCategorical()
-    # if model_path:
-    #     kl.load(model_path)
-    #
-    # V.add(kl, inputs=['cam/image_array'],
-    #       outputs=['pilot/angle', 'pilot/throttle'],
-    #       run_condition='run_pilot')
 
 
     #Choose what inputs should change the car.
@@ -130,8 +121,8 @@ def drive(cfg, model_path=None, use_joystick=False):
     V.add(throttle, inputs=['throttle'])
 
     #add tub to save data
-    inputs=['cam/image_array','imu/acl_x', 'imu/acl_y', 'imu/acl_z','imu/gyr_x','imu/gyr_y', 'imu/gyr_z', 'imu/temp', 'user/angle', 'user/throttle', 'user/mode']
-    types=['image_array', 'float','float', 'float', 'float', 'float', 'float','float', 'float', 'float',  'str']
+    inputs=['cam/image_array','user/angle', 'user/throttle', 'user/mode', 'imu/acl_x', 'imu/acl_y', 'imu/acl_z','imu/gyr_x','imu/gyr_y', 'imu/gyr_z', 'imu/temp']
+    types=['image_array', 'float','float', 'str', 'float', 'float', 'float','float', 'float', 'float',  'float']
 
     th = TubHandler(path=cfg.DATA_PATH)
     tub = th.new_tub_writer(inputs=inputs, types=types)
@@ -155,15 +146,15 @@ def train(cfg, tub_names, model_name):
     y_keys = ['user/angle', 'user/throttle']
 
     def rt(rec):
-        rec['imu_array'] = np.array([ rec['imu/acl_x'], rec['imu/acl_y'], rec['imu/acl_z'],
-            rec['imu/gyr_x'], rec['imu/gyr_y'], rec['imu/gyr_z'], rec['imu/temp'], rec['user/user_angle'] ])
+        rec['imu_array'] = np.array([rec['imu/acl_x'], rec['imu/acl_y'], rec['imu/acl_z'],
+            rec['imu/gyr_x'], rec['imu/gyr_y'], rec['imu/gyr_z'], rec['imu/temp']])
         return rec
-
 
     kl = KerasIMU()
     print('tub_names', tub_names)
     if not tub_names:
         tub_names = os.path.join(cfg.DATA_PATH, '*')
+
     tubgroup = TubGroup(tub_names)
     train_gen, val_gen = tubgroup.get_train_val_gen(X_keys, y_keys, record_transform=rt,
                                                         batch_size=cfg.BATCH_SIZE,
