@@ -1,8 +1,8 @@
-""" 
-CAR CONFIG 
+"""
+CAR CONFIG
 
 This file is read by your car application's manage.py script to change the car
-performance. 
+performance.
 
 EXMAPLE
 -----------
@@ -21,7 +21,7 @@ DATA_PATH = os.path.join(CAR_PATH, 'data')
 MODELS_PATH = os.path.join(CAR_PATH, 'models')
 
 #VEHICLE
-DRIVE_LOOP_HZ = 20
+DRIVE_LOOP_HZ = 25
 MAX_LOOPS = 100000
 
 #CAMERA
@@ -45,7 +45,7 @@ TRAIN_TEST_SPLIT = 0.8
 
 
 #JOYSTICK
-USE_JOYSTICK_AS_DEFAULT =True 
+USE_JOYSTICK_AS_DEFAULT =False 
 JOYSTICK_MAX_THROTTLE = 0.35
 JOYSTICK_STEERING_SCALE = 1.0
 AUTO_RECORD_ON_THROTTLE = True
