@@ -80,7 +80,7 @@ def drive(cfg, model_path=None, use_joystick=False):
     if model_path:
         kl.load(model_path)
     #print
-    V.add(kl, inputs=['cam/image_array','imu/acl_x','imu/acc_y','imu/acc_z', 'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z', 'imu/temp'],
+    V.add(kl, inputs=['cam/image_array','imu/allsensors],
           outputs=['pilot/angle', 'pilot/throttle'],
           run_condition='run_pilot')
 
@@ -121,8 +121,8 @@ def drive(cfg, model_path=None, use_joystick=False):
     V.add(throttle, inputs=['throttle'])
 
     #add tub to save data
-    inputs=['cam/image_array','user/angle', 'user/throttle', 'user/mode', 'imu/acl_x', 'imu/acl_y', 'imu/acl_z','imu/gyr_x','imu/gyr_y', 'imu/gyr_z', 'imu/temp']
-    types=['image_array', 'float','float', 'str', 'float', 'float', 'float','float', 'float', 'float',  'float']
+    inputs=['cam/image_array','user/angle', 'user/throttle', 'user/mode', 'imu/allsensors']
+    types=['image_array', 'float','float', 'str', 'float']
 
     th = TubHandler(path=cfg.DATA_PATH)
     tub = th.new_tub_writer(inputs=inputs, types=types)
@@ -145,10 +145,6 @@ def train(cfg, tub_names, model_name):
     X_keys = ['cam/image_array','imu_array']
     y_keys = ['user/angle', 'user/throttle']
 
-    def rt(rec):
-        rec['imu_array'] = np.array([rec['imu/acl_x'], rec['imu/acl_y'], rec['imu/acl_z'],
-            rec['imu/gyr_x'], rec['imu/gyr_y'], rec['imu/gyr_z'], rec['imu/temp']])
-        return rec
 
     kl = KerasIMU()
     print('tub_names', tub_names)
@@ -175,7 +171,6 @@ def train(cfg, tub_names, model_name):
              saved_model_path=model_path,
              steps=steps_per_epoch,
              train_split=cfg.TRAIN_TEST_SPLIT)
-
 
 if __name__ == '__main__':
     args = docopt(__doc__)
